@@ -19,18 +19,18 @@ To empower patent professionals with minimal technical expertise to:
 
 ## Getting Started
 1. Clone this repository:
-   ```bash
-   git clone https://github.com/your-repo-name.git
-   cd your-repo-name
-   ```
+   	```bash
+   	git clone https://github.com/your-repo-name.git
+   	cd your-repo-name
+   	```
 2. Install the dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
+	```bash
+   	pip install -r requirements.txt
+   	```
 3.	Run the Jupyter Notebook:
-  ```bash
-  jupyter notebook epo_pkf2024_piznet_final.ipynb
-  ```
+	```bash
+	jupyter notebook epo_pkf2024_piznet_final.ipynb
+	```
 ##Outputs
 	•	SQL execution times for PATSTAT queries.
 	•	Dynamic maps and charts of patent data visualized with Pygwalker.
