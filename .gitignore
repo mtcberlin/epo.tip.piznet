@@ -20,3 +20,5 @@ safe_backup/
 training/
 piznet/output/patent_data.csv
 .ipynb_checkpoints/.gitignore-checkpoint
+ipcbrowser/.ipynb_checkpoints/
+
