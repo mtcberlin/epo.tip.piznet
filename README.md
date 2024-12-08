@@ -1,4 +1,7 @@
-# Patent Knowledge Forum 2024 - Regional Patent Analysis with PATSTAT
+# EPO Technology Intelligence Platform
+# at Patent Knowledge Forum 2024, 12/04/2024
+# Regional Patent Analysis with PATSTAT
+# Fun with Class
 
 This repository contains the Jupyter Notebook and associated resources for a short 10min presentaion at the **EPO - Patent Knowledge Forum 2024**. 
 
