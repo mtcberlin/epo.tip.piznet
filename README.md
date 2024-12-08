@@ -27,7 +27,7 @@ We are using the pre programmed SQL ORM by the EPO, but add other data for a ric
 
 ## Getting Started
 1. Get a Technology Intelligence Platform account:
-   	...
+   	at https://tip.epo.org
 2. Get the Jupypter Notebook loaded into your TIP environment
     `epo_pkf2024_piznet_final.ipynb`
 4. Add the optional folder as well
