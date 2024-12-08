@@ -1,0 +1,540 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:annotation>
+		<xsd:documentation>
+	* CPC Scheme Schema *
+	* *
+	* Definition of CPC scheme Structure
+	* *	
+	* Author :  USPTO, EPO
+	* Version 1.7
+	* Last Update : 20/05/2016
+	* Contact: cpc@epo.org and/or at cpc@uspto.gov
+	* *
+	*================================================*
+	*Revision History*
+
+	* CPC Schema version v1.7 (20/05/2016) 
+	
+	 - In classification-item element, Added default value "false" to addtional-only, not-allocatable and breakdown-code attributes in classification-item; Added two new boolean type attributes c-set-base-allowed and c-set-subsequent-allowed.
+
+	 - Removed not used elements: p, class-transfers, class-transfer, to, from, date, link and attribute qualifer.
+
+	 - Differentiate the textual content models in classification title and in notes and warnings. the content model in title is the 
+		modified markup type. Element pre, br, p, link element and  attribute scheme were removed. The new markup type is used by
+		elements in classification-title including text, reference and CPC-specific-text. It contains mixed content with elements
+		"text"
+		"reference"
+		"CPC-specific-text"
+		"class-ref"
+		"u"
+		"media"
+		"sub"
+		"sup"
+	 - Added a new element CPC-specific-note by replacing CPC-specific-text under notes and warnings; 
+	 - The markup type in notes and warnings section is redefined as "note-paragraph-type". It becomes the content model of
+		note-paragraph, CPC-specific-note and pre element. Two new elements table with content of row and entry and
+		reclassidication-date were added to note-paragraph-type with the mixed content and the following elements:
+		"reclassification-date"
+		"CPC-specific-note"
+		"class-ref"
+		"pre"
+		"table"
+		"br"
+		"u"
+		"media"
+		"subnote"
+		"sub"
+		"sup"
+	
+	 - Changed level attribute value from 1 to between 2 and 19 inclusive.
+	 
+	 - Made id attribute and type attribute required in media element.	 
+	 
+	 - Changed symbol type value pattern to
+		xsd:pattern value="[A-HY]([0-9][0-9])?"
+		xsd:pattern value="[A-HY]([0-9][0-9])[A-HJ-NP-Z]"
+		xsd:pattern value="[A-HY]([0-9][0-9])[A-HJ-NP-Z]([1-9]\d{0,2}/\d{2,6})"
+		xsd:pattern value="[A-HY]([0-9][0-9])[A-HJ-NP-Z](2\d{3}/\d{2,6})"
+
+	 - Modified element u from markup type to mixed content with class-ref element.
+	 
+	 - Removed schematron from the public xml schema.
+	 
+	 - Created globally defined components if possible. 
+	 
+	 - Sorted components by name alphabetically other than the root element.
+	 
+	 - Updated description.
+	 
+	* CPC Schema version v1.6 (16/10/2014) 
+	 - Changed level, sort-key attributes from optional to required
+	 - Added @warning-type to note-paragraph
+	 - Added @type to subnote
+	 - Added file-name attribute to media element
+	 - Added status, ipc-concordant, definition-exists attributes to classfication-item
+	 - Added sup, sub element to markup type
+	 - Removed "interleaved",'non-interleaved" value to publication-type attribute
+	 - Enhanced pattern restriction for symbols
+	
+	* CPC Schema version v1.5 (31/01/2014) 
+	 - Added "non-interleaved" value to publication-type attribute
+	
+	* CPC Schema version v1.4 (09/09/2013)
+	 - Added validation of level attribute
+	
+	* CPC Schema version v1.3 (28/03/2012)
+	 - Added 'interleaved' value to production-type	 
+</xsd:documentation>
+	</xsd:annotation>
+	<xsd:element name="class-scheme" type="class-scheme-type">
+		<xsd:annotation>
+			<xsd:documentation>Classification scheme root element</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:attribute name="additional-only" type="xsd:boolean">
+		<xsd:annotation>
+			<xsd:documentation>Used to indicate symbols which can only have a classification value of "additional information." All 2000-series symbols (indexing codes) and Y-series symbols are given a value of "true". All other symbols should be given a value of "false".</xsd:documentation>
+		</xsd:annotation>
+	</xsd:attribute>
+	<xsd:attribute name="alt" type="xsd:string">
+		<xsd:annotation>
+			<xsd:documentation>Alternate text for an image</xsd:documentation>
+		</xsd:annotation>
+	</xsd:attribute>
+	<xsd:element name="br">
+		<xsd:annotation>
+			<xsd:documentation>Line break in text</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:attribute name="breakdown-code" type="xsd:boolean">
+		<xsd:annotation>
+			<xsd:documentation>Used to indicate symbols which are considered to be breakdown indexing codes. Used primarily to distinguish between 2000-series indexing codes which are considered to be either breakdown or orthogonal. Only 2000-series symbols which are subdivisions of "main trunk" groups are given a value of "true". All other symbols should be given a value of "false"</xsd:documentation>
+		</xsd:annotation>
+	</xsd:attribute>
+	<xsd:element name="classification-item" type="classification-item-type">
+		<xsd:annotation>
+			<xsd:documentation>The classification-item element must at least have a symbol. All other elements are optional. Note the classification element is contained within itself. This is a recursive method to create a 'tree' structure of classifications</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:complexType name="classification-item-type">
+		<xsd:sequence>
+			<xsd:element ref="classification-symbol"/>
+			<xsd:element ref="class-title" minOccurs="0"/>
+			<xsd:element ref="notes-and-warnings" minOccurs="0"/>
+			<xsd:element ref="classification-item" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element ref="meta-data" minOccurs="0"/>
+		</xsd:sequence>
+		<xsd:attribute ref="level" use="required"/>
+		<xsd:attribute ref="additional-only" default="false"/>
+		<xsd:attribute ref="sort-key" use="required"/>
+		<xsd:attribute ref="not-allocatable" default="false"/>
+		<xsd:attribute ref="breakdown-code" default="false"/>
+		<xsd:attribute ref="date-revised"/>
+		<xsd:attribute ref="status" use="required"/>
+		<xsd:attribute ref="link-file"/>
+		<xsd:attribute ref="ipc-concordant"/>
+		<xsd:attribute ref="definition-exists"/>
+		<xsd:attribute ref="c-set-base-allowed"/>
+		<xsd:attribute ref="c-set-subsequent-allowed"/>
+	</xsd:complexType>
+	<xsd:element name="classification-symbol" type="simple-symbol-type">
+		<xsd:annotation>
+			<xsd:documentation>A CPC symbol made up of the following consituent parts, constrained by the cpc-symbol-type 		
+SECTION: Sections are the highest level of hierarchy of the CPC Classification. Each section is designated by one of the capital letters 'A' through 'H' as recommended in WIPO Standard ST.8, with the addition of section 'Y', which is unique to CPC.
+CLASS: Each section is subdivided into classes which are the second hierarchical level of the IPC Classification. Each class symbol consists of the section symbol followed by a two-digit number as recommended in WIPO standard ST.8.
+SUBCLASS: Each class comprises one or more subclasses which are the third hierarchical level of the CPC Classification. Each subclass symbol consists of the class symbol followed by a capital letter from 'A' to 'Z' as recommended in WIPO Standard ST.8.           					
+MAINGROUP: Main Group comprises a subclass portion of the symbol followed by one- to four-digit number (1 to 9999) prior to the slash ("/") and the values "00" (reserved for main groups) following the slash. 
+SUBGROUP: Subgroups form subdivisions under the main groups of the CPC Classification. Each subgroup symbol comprises a subclass portion, one- to four-digit numbers prior to the slash (shared by the main group) and two- to six-digit numbers (01 to 999999) following the slash.
+Subsection headings (which group multiple classes under a common heading) and Guidance headings (which group multiple main groups under a common heading) are given a classification-symbol value even though these do not appear in the publication.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="class-ref" type="class-ref-type">
+		<xsd:annotation>
+			<xsd:documentation>An element to encapsulate a cross referenced classification symbol in CPC, or rarely, a reference to a symbol in the IPC scheme</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:complexType name="class-ref-type">
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:string">
+				<xsd:attribute ref="scheme" use="required"/>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<xsd:complexType name="class-scheme-type">
+		<xsd:sequence>
+			<xsd:element ref="classification-item" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:attribute ref="scheme-type" use="required"/>
+		<xsd:attribute ref="publication-date" use="required"/>
+		<xsd:attribute ref="publication-type" use="required"/>
+	</xsd:complexType>
+	<xsd:element name="class-title" type="class-title-type">
+		<xsd:annotation>
+			<xsd:documentation>The corresponding title of the classification symbol - can be class, subclass, main group or subgroup title. Additionally, Subsection headings and Guidance headings are conveyed using class-title. Because guidance headings and subsection headings are hierarchically organized in the CPC, classification-item elements which exist at the guidance heading or subsection heading level but do not have a class-title are placeholders (they are not visible in the publication).</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:complexType name="class-title-type">
+		<xsd:sequence>
+			<xsd:element ref="title-part" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:attribute ref="date-revised"/>
+	</xsd:complexType>
+	<xsd:attribute name="colspan" type="xsd:integer"/>
+	<xsd:element name="CPC-specific-note" type="note-paragraph-type">
+		<xsd:annotation>
+			<xsd:documentation>Used to distinguish note text which are unique to CPC. These are represented in the publication using curly braces ("{" and "}").</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="CPC-specific-text" type="markup">
+		<xsd:annotation>
+			<xsd:documentation>Used to distinguish title text which are unique to CPC. These are represented in the publication using curly braces ("{" and "}").</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:simpleType name="cpc-status-category-type">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="published">
+				<xsd:annotation>
+					<xsd:documentation>Indicates the status of the symbol is published or frozen</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="frozen">
+				<xsd:annotation>
+					<xsd:documentation>To be deleted groups: symbols that are still valid, but will be deleted in the near future after the reclassification has been finished</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:attribute name="c-set-base-allowed" type="xsd:boolean">
+		<xsd:annotation>
+			<xsd:documentation>Indicates if a symbol is allowed for allocation as the first symbol in a combination set (rank 1).</xsd:documentation>
+		</xsd:annotation>
+	</xsd:attribute>
+	<xsd:attribute name="c-set-subsequent-allowed" type="xsd:boolean">
+		<xsd:annotation>
+			<xsd:documentation>Indicates if a symbol is allowed for allocation as a subsequent symbol in a combination set (rank 2 and further).</xsd:documentation>
+		</xsd:annotation>
+	</xsd:attribute>
+	<xsd:attribute name="date-revised" type="xsd:date">
+		<xsd:annotation>
+			<xsd:documentation>Last revised date</xsd:documentation>
+		</xsd:annotation>
+	</xsd:attribute>
+	<xsd:attribute name="definition-exists" type="xsd:boolean">
+		<xsd:annotation>
+			<xsd:documentation>Indicates whether a corresponding definition exists for this symbol. Definitions are stored in a separate XML file.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:attribute>
+	<xsd:element name="entry" type="entry-type">
+		<xsd:annotation>
+			<xsd:documentation>The "entry" element  defines the an individual cell within a table. </xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:complexType name="entry-type" mixed="true">
+		<xsd:choice minOccurs="0" maxOccurs="unbounded">
+			<xsd:element ref="CPC-specific-note"/>
+			<xsd:element ref="class-ref"/>
+			<xsd:element ref="br"/>
+			<xsd:element ref="u"/>
+			<xsd:element ref="media"/>
+			<xsd:element ref="subnote"/>
+			<xsd:element ref="sub"/>
+			<xsd:element ref="sup"/>
+		</xsd:choice>
+		<xsd:attribute ref="rowspan"/>
+		<xsd:attribute ref="colspan"/>
+	</xsd:complexType>
+	<xsd:attribute name="file-name" type="xsd:string">
+		<xsd:annotation>
+			<xsd:documentation>Image file name</xsd:documentation>
+		</xsd:annotation>
+	</xsd:attribute>
+	<xsd:attribute name="id" type="xsd:string">
+		<xsd:annotation>
+			<xsd:documentation>Image id number. Image id's are unique to the file, not the instance of the image within the scheme</xsd:documentation>
+		</xsd:annotation>
+	</xsd:attribute>
+	<xsd:attribute name="ipc-concordant" type="ipc-symbol-type">
+		<xsd:annotation>
+			<xsd:documentation>Used only at the group level to indicate the IPC symbol which concords to this CPC symbol. Symbols which do not exist in IPC are designated the value of "CPCONLY". A compilation of these values are also reflected in the CPC-to-IPC Concordance List.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:attribute>
+	<xsd:simpleType name="ipc-symbol-type">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="CPCONLY"/>
+			<xsd:pattern value="[A-H]([0-9][0-9])[A-Z]([1-9]\d{0,2}/\d{2,6})"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:attribute name="level" type="level-type">
+		<xsd:annotation>
+			<xsd:documentation>Level of the cpc symbol, Section is level 2, Subsection level 3, Class level 4, Subclass level 5,guide heading level 6, main group level 7, subgroup can be between level 8 and 19.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:attribute>
+	<xsd:simpleType name="level-type">
+		<xsd:restriction base="xsd:integer">
+			<xsd:minInclusive value="2"/>
+			<xsd:maxInclusive value="19"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:attribute name="link-file" type="xsd:string">
+		<xsd:annotation>
+			<xsd:documentation>Only present in section XML and root XML. Serves as a hyperlink to the subclass or section XML file.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:attribute>
+	<xsd:complexType name="markup" mixed="true">
+		<xsd:annotation>
+			<xsd:documentation>Markup potentially contained within elements such as title, warning and notes etc.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:choice minOccurs="0" maxOccurs="unbounded">
+			<xsd:element ref="text"/>
+			<xsd:element ref="reference"/>
+			<xsd:element ref="CPC-specific-text"/>
+			<xsd:element ref="class-ref"/>
+			<xsd:element ref="u"/>
+			<xsd:element ref="media"/>
+			<xsd:element ref="sub"/>
+			<xsd:element ref="sup"/>
+		</xsd:choice>
+	</xsd:complexType>
+	<xsd:element name="media" type="media-type">
+		<xsd:annotation>
+			<xsd:documentation>Image used in CPC scheme</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:simpleType name="media-extension-category-type">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="gif"/>
+			<xsd:enumeration value="jpeg"/>
+			<xsd:enumeration value="tif"/>
+			<xsd:enumeration value="bmp"/>
+			<xsd:enumeration value="png"/>
+			<xsd:enumeration value="wav"/>
+			<xsd:enumeration value="wma"/>
+			<xsd:enumeration value="wmv"/>
+			<xsd:enumeration value="mp3"/>
+			<xsd:enumeration value="unknown"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="media-type">
+		<xsd:attribute ref="id" use="required"/>
+		<xsd:attribute ref="file-name"/>
+		<xsd:attribute name="type" type="media-extension-category-type" use="required"/>
+		<xsd:attribute ref="alt"/>
+	</xsd:complexType>
+	<xsd:element name="meta-data" type="xsd:string">
+		<xsd:annotation>
+			<xsd:documentation>The element meta-data is used specifically by the OPS team to allow technical information (meta-data) to be communicated to consumers of this XML. Not used</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:attribute name="not-allocatable" type="xsd:boolean">
+		<xsd:annotation>
+			<xsd:documentation>Used to indicate if documents can be allocated to this symbol for classification. A symbol is allocatable when it is at the maingroup level or below and should be assigned the value of "false".</xsd:documentation>
+		</xsd:annotation>
+	</xsd:attribute>
+	<xsd:element name="note" type="note-type">
+		<xsd:annotation>
+			<xsd:documentation>Notes define or explain specific words, phrases or the scope of places, or indicate how subject matter is classified</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:simpleType name="note-and-warning-category-type">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="note"/>
+			<xsd:enumeration value="warning"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:element name="note-paragraph" type="note-paragraph-type">
+		<xsd:annotation>
+			<xsd:documentation>Note paragraph in notes and warning section. Each distinct note or warning is contained in a note-paragraph element with a note parent. These Notes and Warnings are automatically numbered in the publication. Note paragraph also contains note or warning text of subnotes.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:complexType name="note-paragraph-type" mixed="true">
+		<xsd:annotation>
+			<xsd:documentation>Markup potentially contained within elements in warning and notes etc.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:choice minOccurs="0" maxOccurs="unbounded">
+			<xsd:element ref="reclassification-date"/>
+			<xsd:element ref="CPC-specific-note"/>
+			<xsd:element ref="class-ref"/>
+			<xsd:element ref="pre"/>
+			<xsd:element ref="table"/>
+			<xsd:element ref="br"/>
+			<xsd:element ref="u"/>
+			<xsd:element ref="media"/>
+			<xsd:element ref="subnote"/>
+			<xsd:element ref="sub"/>
+			<xsd:element ref="sup"/>
+		</xsd:choice>
+		<xsd:attribute ref="warning-type"/>
+	</xsd:complexType>
+	<xsd:element name="notes-and-warnings" type="notes-and-warnings-type">
+		<xsd:annotation>
+			<xsd:documentation>An element which contains notes or warnings. Notes and Warnings are distinguished by the note type attribute.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:complexType name="notes-and-warnings-type">
+		<xsd:sequence>
+			<xsd:element ref="note" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:attribute ref="date-revised"/>
+	</xsd:complexType>
+	<xsd:complexType name="note-type">
+		<xsd:sequence>
+			<xsd:element ref="note-paragraph" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:attribute name="type" type="note-and-warning-category-type" use="required"/>
+	</xsd:complexType>
+	<xsd:element name="pre" type="note-paragraph-type">
+		<xsd:annotation>
+			<xsd:documentation>Text in note which are preformatted and should have preserved white space</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:simpleType name="publication-category-type">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="official"/>
+			<xsd:enumeration value="test"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:attribute name="publication-date" type="xsd:date">
+		<xsd:annotation>
+			<xsd:documentation>Publication date</xsd:documentation>
+		</xsd:annotation>
+	</xsd:attribute>
+	<xsd:attribute name="publication-type" type="publication-category-type">
+		<xsd:annotation>
+			<xsd:documentation>Official or test publications</xsd:documentation>
+		</xsd:annotation>
+	</xsd:attribute>
+	<xsd:element name="reclassification-date" type="xsd:date">
+		<xsd:annotation>
+			<xsd:documentation>Date indicating when reclassification began</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="reference" type="markup">
+		<xsd:annotation>
+			<xsd:documentation>Referring to one or more places in the Classification scheme where the subject matter indicated is covered. It is represented as phrase in round brackets (also referred to as parentheses) in the publication.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="row" type="row-type">
+		<xsd:annotation>
+			<xsd:documentation>The "row" element  defines the row within a table.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:attribute name="rowspan" type="xsd:integer"/>
+	<xsd:complexType name="row-type">
+		<xsd:sequence>
+			<xsd:element ref="entry" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:attribute name="scheme" type="scheme-category-type">
+		<xsd:annotation>
+			<xsd:documentation>Indicates the source of symbols is from cpc, ipc or not mapped. The "ipc" value is only used when distinguishing symbols used in the IPC scheme from the CPC scheme. Symbols designated "not-mapped" do not exist in the CPC scheme.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:attribute>
+	<xsd:simpleType name="scheme-category-type">
+		<xsd:annotation>
+			<xsd:documentation>
+				Simple type describing a list of schemes
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="cpc"/>
+			<xsd:enumeration value="ipc"/>
+			<xsd:enumeration value="not-mapped"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:attribute name="scheme-type" type="scheme-category-type"/>
+	<xsd:simpleType name="simple-symbol-type">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[A-HY]([0-9][0-9])?"/>
+			<xsd:pattern value="[A-HY]([0-9][0-9])[A-HJ-NP-Z]"/>
+			<xsd:pattern value="[A-HY]([0-9][0-9])[A-HJ-NP-Z]([1-9]\d{0,2}/\d{2,6})"/>
+			<xsd:pattern value="[A-HY]([0-9][0-9])[A-HJ-NP-Z](2\d{3}/\d{2,6})"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:attribute name="sort-key" type="simple-symbol-type">
+		<xsd:annotation>
+			<xsd:documentation>formatted symbol for sorting purpose</xsd:documentation>
+		</xsd:annotation>
+	</xsd:attribute>
+	<xsd:attribute name="status" type="cpc-status-category-type">
+		<xsd:annotation>
+			<xsd:documentation>Indicates the status of the symbol is published or frozen</xsd:documentation>
+		</xsd:annotation>
+	</xsd:attribute>
+	<xsd:element name="sub" type="xsd:string">
+		<xsd:annotation>
+			<xsd:documentation>Subscript formatted text</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="subnote" type="subnote-type">
+		<xsd:annotation>
+			<xsd:documentation>Formatted list-type structure in notes and warnings</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:simpleType name="subnote-category-type">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="Roman"/>
+			<xsd:enumeration value="roman"/>
+			<xsd:enumeration value="number"/>
+			<xsd:enumeration value="Alpha"/>
+			<xsd:enumeration value="alpha"/>
+			<xsd:enumeration value="bullet"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="subnote-type">
+		<xsd:sequence>
+			<xsd:element ref="note-paragraph" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:attribute name="type" type="subnote-category-type"/>
+	</xsd:complexType>
+	<xsd:element name="sup" type="xsd:string">
+		<xsd:annotation>
+			<xsd:documentation>Superscript formatted text</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="table" type="table-type">
+		<xsd:annotation>
+			<xsd:documentation>The body of the table, used in notes and warnings.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:complexType name="table-type">
+		<xsd:sequence>
+			<xsd:element ref="row" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:element name="text" type="markup">
+		<xsd:annotation>
+			<xsd:documentation>markup text in classification title</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="title-part" type="title-part-type">
+		<xsd:annotation>
+			<xsd:documentation>Part of a multipart title when it is considered desirable to treat together distinct kinds of subject matter which cannot conveniently be covered by a single phrase. Title parts are separated by semicolons (";") in the publication. CPC-specific title parts may be designated using additional elements and separated by semicolons in the title text.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:complexType name="title-part-type">
+		<xsd:choice maxOccurs="unbounded">
+			<xsd:element ref="text"/>
+			<xsd:element ref="reference"/>
+			<xsd:element ref="CPC-specific-text"/>
+		</xsd:choice>
+	</xsd:complexType>
+	<xsd:element name="u" type="u-type">
+		<xsd:annotation>
+			<xsd:documentation>Underlined text</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:complexType name="u-type" mixed="true">
+		<xsd:choice minOccurs="0" maxOccurs="unbounded">
+			<xsd:element ref="class-ref"/>
+		</xsd:choice>
+	</xsd:complexType>
+	<xsd:simpleType name="warning-category-type">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="reclass-destination"/>
+			<xsd:enumeration value="reclass-source"/>
+			<xsd:enumeration value="ipc-not-used"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:attribute name="warning-type" type="warning-category-type"/>
+</xsd:schema>
