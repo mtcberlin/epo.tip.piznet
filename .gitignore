@@ -25,3 +25,5 @@ piznet/output/patent_data.csv
 safe_backup/
 training/
 familytree/.env
+familytree/.ipynb_checkpoints/
+
